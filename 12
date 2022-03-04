@@ -1,18 +1,19 @@
-local function tIME(file, chunk)
+local function tEXt(file, chunk)
 	local data = chunk.Data
+	local key, value = "", ""
 	
-	local timeStamp = 
-	{
-		Year  = data:ReadUInt16();
-		Month = data:ReadByte();
-		Day   = data:ReadByte();
+	for byte in data:IterateBytes() do
+		local char = string.char(byte)
 		
-		Hour   = data:ReadByte();
-		Minute = data:ReadByte();
-		Second = data:ReadByte();
-	}
+		if char == '\0' then
+			key = value
+			value = ""
+		else
+			value = value .. char
+		end
+	end
 	
-	file.TimeStamp = timeStamp
+	file.Metadata[key] = value
 end
 
-return tIME
+return tEXt
